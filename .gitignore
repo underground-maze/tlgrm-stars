@@ -1,0 +1,7 @@
+*.py[cod]
+__pycache__/
+# custom ignore
+settings_local.py
+.vagrant
+var/
+static/
