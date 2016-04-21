@@ -1,5 +1,9 @@
 VENV_PATH := /home/vagrant/venv/bin
 
+runserver:
+	killall -9 python
+	$(VENV_PATH)/python tlgrm_runner.py
+
 start:
 	( ( nohup $(VENV_PATH)/python tlgrm_runner.py > /dev/null 2> /dev/null 2>&1 ) & )
 
