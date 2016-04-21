@@ -132,4 +132,5 @@ def app():
         run('make wheel_install')
         # run app tasks for devserver start
         # Copy settings local
-        run('cd {project_name} && cp settings_local.py.example settings_local.py'.format(**VARS))
+        # run('cd {project_name} && cp settings_local.py.example settings_local.py'.format(**VARS))
+        run('make start', pty=False)

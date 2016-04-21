@@ -1,5 +1,8 @@
 VENV_PATH := /home/vagrant/venv/bin
 
+start:
+	( ( nohup $(VENV_PATH)/python tlgrm_runner.py > /dev/null 2> /dev/null 2>&1 ) & )
+
 pep8:
 	$(VENV_PATH)/pep8 --exclude=*migrations*,*settings_local.py* --max-line-length=119 --show-source  starreditemsbot/
 
