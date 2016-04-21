@@ -2,4 +2,3 @@ tornado==4.3
 gunicorn==19.4.5
 pep8==1.7.0
 pylama==7.0.7
-psycopg2==2.6.1
