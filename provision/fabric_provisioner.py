@@ -77,20 +77,7 @@ def nginx():
 @sentinel('database')
 def database():
     """ Install database """
-    # install postgres apt
-    sudo('apt-get -y install postgresql postgresql-server-dev-all python-psycopg2')
-    # make postgers password
-    with fabric.context_managers.settings(warn_only=True):
-        commands = (
-            'CREATE USER {db_user};',
-            'ALTER USER {db_user} WITH PASSWORD \'{db_password}\';',
-            'ALTER USER {db_user} CREATEDB;',
-            'CREATE DATABASE {db_name};',
-            'GRANT ALL PRIVILEGES ON DATABASE {db_name} TO {db_user};',
-        )
-        for command in commands:
-            run('sudo -u postgres psql -c "%s"' % command.format(**VARS))
-    
+    pass
 
 
 @sentinel('locale')
@@ -141,34 +128,8 @@ def app():
     with cd(VARS['root_dir']):
         # Create venv and install requirements
         run('pyvenv-3.5 {venv_path}'.format(**VARS))
-        
         # Install required python packages with pip from wheels archive
         run('make wheel_install')
-        
         # run app tasks for devserver start
         # Copy settings local
         run('cd {project_name} && cp settings_local.py.example settings_local.py'.format(**VARS))
-
-
-def localserver():
-    with cd(VARS['root_dir']):
-        # collect static files
-        for command in ('migrate --noinput', 'collectstatic --noinput', ):  # 'compilemessages', ):
-            run('{venv_path}/bin/python manage.py {command}'.format(command=command, **VARS))
-        # make root dir available to read
-        # sudo('chmod 755 {base_dir}/static -R'.format(**VARS))
-        # Create user
-        create_user_py = (
-            'from django.contrib.auth import get_user_model'   '\n'
-            'User = get_user_model()' '\n'
-            'User.objects.create_superuser(**{user_data})'  '\n'
-        ).format(**VARS)
-
-        run('echo "{create_user_py}" | {venv_path}/bin/python manage.py shell'.format(
-            create_user_py=create_user_py, **VARS))
-        run('mkdir var -p')
-
-        # Start runserver
-        run('make start', pty=False)
-
-
